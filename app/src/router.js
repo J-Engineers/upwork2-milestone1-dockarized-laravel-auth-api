@@ -1,0 +1,80 @@
+import { createRouter, createWebHistory } from "vue-router"
+import DefaultLayout from "./components/DefaultLayout.vue"
+
+import useUserStore from "./store/user.js";
+import Home from "./pages/Home.vue"
+import Login from "./pages/Login.vue"
+import Frontend from "./pages/Frontend.vue"
+import Backend from "./pages/Backend.vue"
+import Developer from "./pages/Developer.vue"
+import Signup from "./pages/Signup.vue"
+import NotFound from "./pages/NotFound.vue"
+import Verify from "./pages/Verify.vue"
+import Forgot from "./pages/Forgot.vue"
+import Reset from "./pages/Reset.vue"
+import Landing from "./pages/Landing.vue"
+
+
+const routes = [
+    {
+        path: "/app",
+        component: DefaultLayout,
+        children: [
+            {path: "/app", name: 'Home', component: Home},
+            {path: "/frontend", name: 'Frontend', component: Frontend},
+            {path: "/backend", name: 'Backend', component: Backend},
+            {path: "/developer", name: 'Developer', component: Developer}
+        ],
+        beforeEnter: async (to, from, next) => {
+        try {
+            const userStore = useUserStore();
+            await userStore.fetchUser();
+            next();
+        } catch (error) {
+            next(false); // Cancel navigation if data fetching fails
+        }
+        },
+    },
+    {
+        path: "/login",
+        name: 'Login',
+        component: Login,
+    },
+    {
+        path: "/signup",
+        name: 'Signup',
+        component: Signup,
+    },
+    {
+        path: "/verify",
+        name: 'Verify',
+        component: Verify,
+    },
+    {
+        path: "/forgot",
+        name: 'Forgot',
+        component: Forgot,
+    },
+    {
+        path: "/reset",
+        name: 'Reset',
+        component: Reset,
+    },
+    {
+        path: "/",
+        name: 'Landing',
+        component: Landing,
+    },
+    {
+        path: "/:pathMatch(.*)*",
+        name: 'NotFound',
+        component: NotFound
+    },
+    
+];
+const router = createRouter({
+    history: createWebHistory(),
+    routes
+})
+
+export default router
