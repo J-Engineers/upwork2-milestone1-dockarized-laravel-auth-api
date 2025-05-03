@@ -15,14 +15,14 @@
     const successMessage = ref('')
 
     function login() {
-        axiosClient.post("/login", data.value)
+        axiosClient.post("/user/login", data.value)
         .then(response => {
-          localStorage.setItem('token', response.data.token)
+          localStorage.setItem('token', response.data.data.access_token)
           router.push({name: 'Home'})
         })
         .catch(error => {
-          console.log(error.response.data)
-          errorMessage.value = error.response.data.message;
+          console.log(error)
+          errorMessage.value = error.message ? error.message : error.response.data.message;
         })
     }
 

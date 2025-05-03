@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::getConnection()->getPdo()->exec('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('user_name');

@@ -56,10 +56,10 @@ class AuthController extends Controller
             $to_email = $request->email;
             $data = array(
             "name"=> $user->user_name,
-            "body" => "Welcome to Blueprint Platform, 
+            "body" => "Welcome to AI Platform, 
             We are glad you are here. Visit the Link below to begin. 
             You requested to reset your password.",
-            "link" => env('APP_URL').'/tutor/reset',
+            "link" => env('APP_URL').'/app',
             'token' => $otp
             );
         
@@ -114,9 +114,6 @@ class AuthController extends Controller
 
         $request->validated();
 
-    
-
-
         // Attempt to find the user by email
         $user = User::where('email', $request->email)->first();
 
@@ -134,13 +131,13 @@ class AuthController extends Controller
         $to_email = $request->email;
         $data = array(
            "name"=> $request->user_name,
-           "body" => "Welcome to Blueprint Platform, We are glad you are here. Type in this token in next page or click on the link below to open the page",
-           "link" => env('APP_URL').'/admin/verification',
+           "body" => "Welcome to the AI Platform, We are glad you are here. Type in this token in next page or click on the link below to open the page",
+           "link" => env('APP_URL').'/user/signup/verification',
            'token' => $verify_token
         );
        
         if(!Mail::send("emails.registration", $data, function($message) use ($to_name, $to_email) {
-           $message->to($to_email, $to_name)->subject("Blueprint Registration");
+           $message->to($to_email, $to_name)->subject("AI Registration");
            $message->from(env("MAIL_USERNAME", "jeorgejustice@gmail.com"), "Welcome");
         })){
 
@@ -166,9 +163,10 @@ class AuthController extends Controller
         }else{
             $referredby_user_id = null;
         }
-
+        $uuid = (string)Str::uuid();
+        
         $user = User::create([
-            'id' => (string)Str::uuid(),
+            'id' => $uuid,
             'user_name' => $request->user_name,
             'email' => $request->email,
             'is_admin' => false,
@@ -241,10 +239,10 @@ class AuthController extends Controller
         }
 
         // Attempt to find the user by email
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('verify_token', $request->verify_token)->first();
 
         // Check if the user exists
-        if (!$user OR !($user->verify_token === $request->verify_token)) {
+        if (!$user) {
             return response()->json([
                 'status_code' => Response::HTTP_UNAUTHORIZED,
                 'status' => 'error',
@@ -252,21 +250,13 @@ class AuthController extends Controller
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        // Check if the user has confrimed email
-        if ($user->verify_email == 1) {
-            return response()->json([
-                'status_code' => Response::HTTP_UNAUTHORIZED,
-                'status' => 'success',
-                'message' => 'Verification Successful done already. Kindly login',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
          
         $to_name = "Dear ...";
-        $to_email = $request->email;
+        $to_email = $user->email;
         $data = array(
            "name"=> $user->user_name,
-           "body" => "Welcome to Blueprint Platform, We are glad you are here. Visit the Link below to begin",
-           "link" => env('APP_URL').'/admin/verification'
+           "body" => "Welcome to AI Platform, We are glad you are here. Visit the Link below to begin",
+           "link" => env('APP_URL').'/login'
         );
        
         if(!Mail::send("emails.registrationVerification", $data, function($message) use ($to_name, $to_email) {
@@ -286,7 +276,7 @@ class AuthController extends Controller
         
 
         AccessToken::where('tokenable_id', $user->id)->delete();
-        $token = $user->createToken($request->email)->plainTextToken; // Creating access_token
+        $token = $user->createToken($user->email)->plainTextToken; // Creating access_token
         
          
         return response()->json([
@@ -312,18 +302,6 @@ class AuthController extends Controller
     */
 
     public function logout(Request $request){
-
-        $fields = Validator::make($request->all(), [
-            'api_key' => 'required|string'
-        ]);
- 
-        if($fields->fails()){
-            return response()->json([
-                 'status_code' => Response::HTTP_UNPROCESSABLE_ENTITY, // 422,
-                 'status' => 'error',
-                'message' => $fields->messages(),
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
         
         Auth::user()->tokens()->delete();
         auth('sanctum')->user()->currentAccessToken()->delete();

@@ -4,9 +4,6 @@ import DefaultLayout from "./components/DefaultLayout.vue"
 import useUserStore from "./store/user.js";
 import Home from "./pages/Home.vue"
 import Login from "./pages/Login.vue"
-import Frontend from "./pages/Frontend.vue"
-import Backend from "./pages/Backend.vue"
-import Developer from "./pages/Developer.vue"
 import Signup from "./pages/Signup.vue"
 import NotFound from "./pages/NotFound.vue"
 import Verify from "./pages/Verify.vue"
@@ -20,10 +17,7 @@ const routes = [
         path: "/app",
         component: DefaultLayout,
         children: [
-            {path: "/app", name: 'Home', component: Home},
-            {path: "/frontend", name: 'Frontend', component: Frontend},
-            {path: "/backend", name: 'Backend', component: Backend},
-            {path: "/developer", name: 'Developer', component: Developer}
+            {path: "/app", name: 'Home', component: Home}
         ],
         beforeEnter: async (to, from, next) => {
         try {
