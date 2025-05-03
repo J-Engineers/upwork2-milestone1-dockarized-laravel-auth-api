@@ -22,7 +22,6 @@ class VerifyEmail extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|string|email',
             'verify_token' => 'required|integer',
             'api_key' => [
                 function ($attribute, $value, $fail)  {

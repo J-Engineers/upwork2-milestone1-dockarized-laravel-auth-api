@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Users\UserController;
 use App\Http\Controllers\Admin\AdminController;
-
+use App\Http\Controllers\AI\ChatController;
 
 Route::post('/v1/user/registration', [AuthController::class, 'register'])->name('user.register');
 Route::post('/v1/user/registration/verify', [AuthController::class, 'send_registration_verification_email'])->name('user.verify')->middleware(ActiveUser::class);
@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
         // Users Routes
         Route::get('/v1/user', [UserController::class, 'details'])->name('user.details');
+        Route::post('/v1/user/prompt', [ChatController::class, 'chat'])->name('chat');
         Route::put('/v1/user/password', [UserController::class, 'changePassword'])->name('user.password');
         Route::put('/v1/user/update', [UserController::class, 'updateDetails'])->name('user.update');
         Route::post('/v1/user/photo', [UserController::class, 'updatePhoto'])->name('user.photo');

@@ -95,9 +95,9 @@
     const playlistData = ref('');
 
     function playlist() {
-        axiosClient.post("/playlist", {"genre": selected.value.name})
+        axiosClient.post("/user/prompt", {"genre": selected.value.name})
         .then(response => {
-            playlistData.value = response.data.data
+            playlistData.value = response.data.data.answer
         })
         .catch(error => {
             console.log(error)

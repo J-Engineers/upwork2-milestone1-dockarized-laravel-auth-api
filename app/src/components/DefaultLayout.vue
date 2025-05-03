@@ -121,14 +121,11 @@
         email: localStorage.getItem('userEmail'),
     }
     const navigation = [
-        { name: 'Home', to: {name: 'Home'} },
-        { name: 'Frontend', to: {name: 'Frontend'} },
-        { name: 'Backend', to: {name: 'Backend'} },
-        { name: 'Developer', to: {name: 'Developer'} },
+        { name: 'Home', to: {name: 'Home'} }
     ]
 
     function logout() {
-        axiosClient.post('/logout')
+        axiosClient.post('/user/logout')
         .then((response) => {
             localStorage.removeItem("token");
             router.push({name: 'Landing'})

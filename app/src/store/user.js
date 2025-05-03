@@ -10,9 +10,10 @@ const useUserStore = defineStore('user', {
     fetchUser() {
       return axiosClient.get('/user')
         .then(({data}) => {
-          this.user = data
-          localStorage.setItem('userName', data.name)
-          localStorage.setItem('userEmail', data.email)
+          this.user = data.data
+          localStorage.setItem('userName', data.data.user_name)
+          localStorage.setItem('userEmail', data.data.email)
+
         })
         .catch(error => {
           router.push({name: 'Login'})

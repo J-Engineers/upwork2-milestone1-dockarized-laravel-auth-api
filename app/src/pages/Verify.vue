@@ -6,14 +6,14 @@
     import router from "../router.js";
 
     const data = ref({
-      token: ''
+      verify_token: ''
     })
 
     const errorMessages = ref('')
     const successMessage = ref('')
 
     function verify() {
-        axiosClient.post("/verify", data.value)
+        axiosClient.post("/user/registration/verify", data.value)
         .then(response => {
           localStorage.setItem('success_msg', response.data.message)
           router.push({name: 'Login'})
@@ -52,9 +52,9 @@
         
         <form class="space-y-6" @submit.prevent="verify">
           <div>
-            <label for="token" class="block text-sm/6 font-medium text-gray-900">OTP</label>
+            <label for="verify_token" class="block text-sm/6 font-medium text-gray-900">OTP</label>
             <div class="mt-2 mb-2">
-              <input type="text" name="token" id="token" required="" @focus="resetValidation()" v-model="data.token" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+              <input type="text" name="verify_token" id="verify_token" required="" @focus="resetValidation()" v-model="data.verify_token" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
             </div>
             <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Verify Token </button>
           </div>
